@@ -1,0 +1,33 @@
+<head></head>
+
+<body>
+  <input type="text" id="metafieldValue" placeholder="Enter number" value="{{ customer.metafields.custom.card }}" />
+  <button id="submitProxy">Set Custom Number</button>
+</body>
+
+<script>
+  document.getElementById("submitProxy").addEventListener("click", async () => {
+    const value = document.getElementById("metafieldValue").value;
+    const formData = new FormData();
+    formData.append("value", value);
+
+    const response = await fetch("/apps/proxy-test", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Card Form",
+  "target": "section",
+  "settings": [
+    { "type": "product", "id": "product", "label": "product", "autofill": true },
+    { "type": "color", "id": "colour", "label": "Star Colour", "default": "#ff0000" }
+  ]
+}
+{% endschema %}
+
