@@ -1,25 +1,56 @@
 <head></head>
 
 <body>
-  <input type="text" id="metafieldValue" placeholder="Enter number" value="{{ customer.metafields.custom.card }}" />
-  <button id="submitProxy">Set Custom Number</button>
-</body>
-
-<script>
-  document.getElementById("submitProxy").addEventListener("click", async () => {
-    const value = document.getElementById("metafieldValue").value;
-    const formData = new FormData();
-    formData.append("value", value);
-
-    const response = await fetch("/apps/proxy-test", {
-      method: "POST",
-      body: formData,
-      redirect: "manual"
+  <input type="text" id="metafieldValue" placeholder="Enter value" />
+  <button id="submitProxy">Submit</button>
+  <p id="proxyResult" style="margin-top: 10px;"></p>
+  
+  <script>
+    document.getElementById("submitProxy").addEventListener("click", async () => {
+      const value = document.getElementById("metafieldValue").value;
+      const resultEl = document.getElementById("proxyResult");
+      resultEl.textContent = ""; // clear old message
+  
+      const formData = new FormData();
+      formData.append("value", value);
+  
+      try {
+        const response = await fetch("/apps/proxy-test", {
+          method: "POST",
+          body: formData,
+          redirect: "manual"
+        });
+  
+        const contentType = response.headers.get("content-type") || "";
+  
+        if (!response.ok) {
+          const errorText = await response.text();
+          resultEl.textContent = "❌ Error submitting: " + errorText;
+          resultEl.style.color = "red";
+          return;
+        }
+  
+        if (contentType.includes("application/json")) {
+          const result = await response.json();
+          if (result.success) {
+            resultEl.textContent = "✅ Metafield updated successfully!";
+            resultEl.style.color = "green";
+          } else {
+            resultEl.textContent = "⚠️ Failed to update metafield.";
+            resultEl.style.color = "orange";
+          }
+        } else {
+          const text = await response.text();
+          resultEl.textContent = "⚠️ Unexpected response: " + text;
+          resultEl.style.color = "gray";
+        }
+      } catch (err) {
+        resultEl.textContent = "🚫 Request failed: " + err.message;
+        resultEl.style.color = "red";
+      }
     });
-
-    const result = await response.json();
-  });
-</script>
+  </script>
+</body>
 
 {% schema %}
 {
