@@ -3,7 +3,7 @@
 client_id = "92dcb23a84809bc03f6be6adf5263f92"
 name = "customer-card-change"
 handle = "customer-card-change"
-application_url = "https://example.com/"
+application_url = "https://customer-card.onrender.com/"
 embedded = true
 
 [build]
@@ -25,7 +25,11 @@ api_version = "2025-04"
 scopes = "read_customers,write_customers"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [
+  "https://customer-card.onrender.com//auth/callback",
+  "https://customer-card.onrender.com//auth/shopify/callback",
+  "https://customer-card.onrender.com//api/auth/callback"
+]
 
 [pos]
 embedded = false
