@@ -23,7 +23,6 @@ function isValidProxyRequest(query, secret) {
 }
 
 export async function action({ request }) {
-  console.log("----------PROXY----------");
   const { session, admin } = await authenticate.public.appProxy(request);
   const formData = await request.formData();
   const url = new URL(request.url);

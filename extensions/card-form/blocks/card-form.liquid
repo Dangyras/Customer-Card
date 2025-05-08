@@ -14,6 +14,7 @@
     const response = await fetch("/apps/proxy-test", {
       method: "POST",
       body: formData,
+      redirect: "manual"
     });
 
     const result = await response.json();
